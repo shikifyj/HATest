@@ -1,0 +1,40 @@
+bonding: 0 #选择测试类型,1代表Corosync是bonding，0代表Corosync非bonding
+Cycle execution times: 1  #程序循环执行的次数
+test_node:  #主要被测节点
+  - name: dunn-test01 #节点名
+    ip: 10.203.1.112 #节点ip
+    bond_ip: 192.168.8.190  #bondip
+    username: root #用户名
+    password: password #密码
+    bond_name: bond0  #bond名
+    sub_bond_name:
+      sub1: ens192 #组成bond的其中一张子网卡名
+      sub2: ens224 #组成bond的其中一张子网卡名
+  - name: dunn-test02 #节点名
+    ip: 10.203.1.113 #节点ip
+    bond_ip: 192.168.8.191  #bondip
+    username: root #用户名
+    password: password #密码
+    bond_name: bond0  #bond名
+    sub_bond_name:
+      sub1: ens192 #组成bond的其中一张子网卡名
+      sub2: ens224 #组成bond的其中一张子网卡名
+  - name: dunn-test03 #节点名
+    ip: 10.203.1.115 #节点ip
+    bond_ip: 192.168.8.192  #bondip
+    username: root #用户名
+    password: password #密码
+    bond_name: bond0  #bond名
+    sub_bond_name:
+      sub1: ens192 #组成bond的其中一张子网卡名
+      sub2: ens224 #组成bond的其中一张子网卡名
+other_node: #辅助测试节点（versaplx06）
+  - name: dunn-test03 #节点名
+    ip: 10.203.1.115 #节点ip
+    username: root #用户名
+    password: password #密码
+JobNum: 1
+BlockSize: 8K   #设置单次生成和写入数据的大小
+TotalSize: 10G  #设置写入单个文件/设备的数据总大小
+MasterMask: shutdownhxnode1  #block 级测试使用的参数，设置并发写入的线程数（大于0的整数）
+DevicePath: /dev/sdb  #device ID 用于生成特定的数据
