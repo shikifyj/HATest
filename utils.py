@@ -1,3 +1,4 @@
+import re
 import subprocess
 import yaml
 import paramiko
@@ -7,7 +8,8 @@ import logging.handlers
 import datetime
 import sys
 import socket
-
+import time
+import json
 
 class Telnetconn:
     def __init__(self, ip):
@@ -130,6 +132,84 @@ class ConfFile(object):
         except TypeError:
             print("Error in the type of file .")
 
+    def parameter_judgment(self):
+        judg_list = ["B","K","kB","KiB","M","MB","MiB","G","GB","GiB","T","TB","TiB","P","PB","PiB"]
+
+        result1 = re.findall(r'\d+([a-zA-Z]+)',self.config["BlockSize"])
+        if result1 == []:
+            print("BlockSize参数填写错误")
+            sys.exit()
+
+        judg_bool1 = False
+        for i in judg_list:
+            if result1[0] == i:
+                judg_bool1 = True
+
+        if judg_bool1 == False:
+            print("BlockSize参数填写单位错误")
+            sys.exit()
+
+        result2 = re.findall(r'\d+([a-zA-Z]+)',self.config["TotalSize"])
+        if result2 == []:
+            print("TotalSize参数填写错误")
+            sys.exit()
+
+        judg_bool2 = False
+        for i in judg_list:
+            if result2[0] == i:
+                judg_bool2 = True
+
+        if judg_bool2 == False:
+            print("TotalSize参数填写单位错误")
+            sys.exit()
+
+    def get_cluster_name(self):
+        datetime = time.strftime('%y%m%d')
+        return f"{self.config['cluster']}_{datetime}"
+
+    def get_bindnetaddr(self):
+        ips = self.config['heartbeat_line']
+        lst = []
+        for ip in ips:
+            ip_list = ip.split(".")
+            lst.append(f"{'.'.join(ip_list[:3])}.0")
+        return lst
+
+    def get_interface(self):
+        bindnetaddr_list = self.get_bindnetaddr()
+        interface_list = []
+        ringnumber = 0
+        mcastport_number = 5405
+        for bindnetaddr in bindnetaddr_list[0:]:
+            interface = "interface {\n\tringnumber: %s\n\tbindnetaddr: %s\n\tmcastport: %s\n\tttl: 1\n}" % (
+                ringnumber, bindnetaddr,mcastport_number)
+            interface = FileEdit.add_data_to_head(interface, '\t')
+            interface_list.append(interface)
+            ringnumber += 1
+            mcastport_number += 1
+        return "\n".join(interface_list)
+
+    def get_nodelist(self):
+        hostname_list = []
+        for i in self.config["test_node"]:
+            hostname_list.append(i['name'])
+
+        str_node_all = ""
+
+        for node, hostname in zip(self.config['test_node'], hostname_list):
+            dict_node = {}
+            str_node = "node "
+            index = 0
+            for ip in self.config["heartbeat_line"]:
+                dict_node.update({f"ring{index}_addr": ip})
+                index += 1
+            dict_node.update({'name': hostname})
+            str_node += json.dumps(dict_node, indent=4, separators=(',', ': '))
+            str_node = FileEdit.remove_comma(str_node)
+            str_node_all += str_node + '\n'
+        str_node_all = FileEdit.add_data_to_head(str_node_all, '\t')
+        str_nodelist = "nodelist {\n%s\n}" % str_node_all
+        return str_nodelist
 
 class Log(object):
     def __init__(self):
@@ -227,3 +307,19 @@ class FileEdit(object):
         for i in range(len(text_list)):
             text_list[i] = text_list[i].rstrip(',')
         return '\n'.join(text_list)
+
+
+def connect():
+    list_ssh = []
+
+    test = ConfFile("config.yaml")
+    for i in test.config["test_node"]:
+        ssh_obj = SSHconn(host=i["ip"],username=i["username"],password=i["password"])
+        list_ssh.append(ssh_obj)
+
+    return list_ssh
+
+
+if __name__ == "__main__":
+    a = connect()
+    print(a)

@@ -1,5 +1,9 @@
 bonding: 0 #选择测试类型,1代表Corosync是bonding，0代表Corosync非bonding
 Cycle execution times: 1  #程序循环执行的次数
+cluster: <cluster name>
+heartbeat_line:
+  - 11.11.11.11
+  - 22.22.22.22
 test_node:  #主要被测节点
   - name: dunn-test01 #节点名
     ip: 10.203.1.112 #节点ip
