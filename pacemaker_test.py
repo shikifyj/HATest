@@ -3,6 +3,11 @@ import timeout_decorator
 import re
 import time
 
+"""
+1.不同crm st的判断依据
+2.port需要ssh操作
+3.刷新资源的命令"crm res ref"
+"""
 
 class Corosync(object):
     def __init__(self):
@@ -235,3 +240,8 @@ class GoMeter(object):
     def start_gometer(self, ssh_conn=None):
         cmd = './main write'
         utils.exec_cmd(cmd, ssh_conn)
+
+    def compare(self, ssh_conn=None):
+        cmd = './main compare'
+        utils.exec_cmd(cmd, ssh_conn)
+
