@@ -5,36 +5,36 @@ heartbeat_line:
   - 11.11.11.11
   - 22.22.22.22
 test_node:  #主要被测节点
-  - name: dunn-test01 #节点名
-    ip: 10.203.1.112 #节点ip
-    bond_ip: 192.168.8.190  #bondip
+  - name: test-n0 #节点名
+    ip: 10.203.1.169 #节点ip
+    bond_ip: 10.203.2.169  #bondip
     username: root #用户名
     password: password #密码
-    bond_name: bond0  #bond名
+    bond_name: None  #bond名
     sub_bond_name:
-      sub1: ens192 #组成bond的其中一张子网卡名
-      sub2: ens224 #组成bond的其中一张子网卡名
-  - name: dunn-test02 #节点名
-    ip: 10.203.1.113 #节点ip
-    bond_ip: 192.168.8.191  #bondip
+      sub1: None #组成bond的其中一张子网卡名
+      sub2: None #组成bond的其中一张子网卡名
+  - name: test-n1 #节点名
+    ip: 10.203.1.238 #节点ip
+    bond_ip: 10.203.2.238  #bondip
     username: root #用户名
     password: password #密码
-    bond_name: bond0  #bond名
+    bond_name: None  #bond名
     sub_bond_name:
-      sub1: ens192 #组成bond的其中一张子网卡名
-      sub2: ens224 #组成bond的其中一张子网卡名
-  - name: dunn-test03 #节点名
-    ip: 10.203.1.115 #节点ip
-    bond_ip: 192.168.8.192  #bondip
+      sub1: None #组成bond的其中一张子网卡名
+      sub2: None #组成bond的其中一张子网卡名
+  - name: test-n2 #节点名
+    ip: 10.203.1.111 #节点ip
+    bond_ip: 10.203.2.111  #bondip
     username: root #用户名
     password: password #密码
-    bond_name: bond0  #bond名
+    bond_name: None  #bond名
     sub_bond_name:
-      sub1: ens192 #组成bond的其中一张子网卡名
-      sub2: ens224 #组成bond的其中一张子网卡名
+      sub1: None #组成bond的其中一张子网卡名
+      sub2: None #组成bond的其中一张子网卡名
 other_node: #辅助测试节点（versaplx06）
-  - name: dunn-test03 #节点名
-    ip: 10.203.1.115 #节点ip
+  - name: None #节点名
+    ip: None #节点ip
     username: root #用户名
     password: password #密码
 JobNum: 1
